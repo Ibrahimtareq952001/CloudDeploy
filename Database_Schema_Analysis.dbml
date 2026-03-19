@@ -1,0 +1,597 @@
+// for viewing https://dbdiagram.io/d/69bc0433fb2db18e3bbd7e1a
+
+// Dokploy Database Schema - DBML Format
+// Generated from comprehensive schema analysis
+// Database: PostgreSQL with Drizzle ORM
+
+Project Dokploy {
+  database_type: 'PostgreSQL'
+  Note: 'Complete database schema for Dokploy deployment platform'
+}
+
+// ===== IDENTITY & ACCESS MANAGEMENT =====
+
+Table user {
+  id text [primary key]
+  createdAt timestamp [not null]
+  email text [unique, not null]
+  emailVerified timestamp
+  firstName text
+  image text
+  lastName text
+  name text
+  password text [not null]
+  plan text [not null]
+  stripeId text [unique]
+  striped boolean [not null, default: false]
+  turkishCitizen boolean
+  username text [unique]
+  role text [not null, default: 'member']
+  
+  Note: 'Core user account entity. Stores user authentication and profile information'
+}
+
+Table account {
+  id text [primary key]
+  userId text [not null, ref: > user.id]
+  type text [not null]
+  provider text [not null]
+  access_token text
+  expires_at integer
+  id_token text
+  providerAccountId text [not null]
+  refresh_token text
+  refresh_token_expires_in integer
+  scope text
+  session_state text
+  token_type text
+  
+  Indexes {
+    (userId, provider) [unique, name: "account_userId_provider_unique"]
+  }
+  
+  Note: 'OAuth/third-party authentication accounts linked to users'
+}
+
+Table apikey {
+  id text [primary key]
+  apiKey text [unique, not null]
+  createdAt timestamp [not null]
+  description text
+  name text [not null]
+  userId text [not null, ref: > user.id]
+  
+  Note: 'API keys for programmatic access to Dokploy'
+}
+
+Table organization {
+  id text [primary key]
+  createdAt timestamp [not null]
+  description text
+  icon text
+  name text [not null]
+  ownerId text [not null, ref: > user.id]
+  
+  Note: 'Organizations own projects and infrastructure. Each org has an owner'
+}
+
+Table member {
+  id text [primary key]
+  createdAt timestamp [not null]
+  description text
+  notification boolean [not null, default: true]
+  organizationId text [not null, ref: > organization.id]
+  role text [not null]
+  userId text [not null, ref: > user.id]
+  
+  Indexes {
+    (organizationId, userId) [unique, name: "member_organizationId_userId_unique"]
+  }
+  
+  Note: 'Organization members with specific roles'
+}
+
+Table invitation {
+  id text [primary key]
+  code text [unique, not null]
+  createdAt timestamp [not null]
+  expiresAt timestamp [not null]
+  organizationId text [not null, ref: > organization.id]
+  role text [not null]
+  
+  Note: 'Invitations for adding new members to organizations'
+}
+
+Table twoFactor {
+  id text [primary key]
+  createdAt timestamp [not null]
+  secret text [not null]
+  userId text [unique, not null, ref: > user.id]
+  verified boolean [not null, default: false]
+  
+  Note: 'Two-factor authentication settings per user'
+}
+
+// ===== AUTHENTICATION & GIT =====
+
+Table ssoProvider {
+  id text [primary key]
+  clientId text [not null]
+  clientSecret text [not null]
+  createdAt timestamp [not null]
+  displayName text
+  enabled boolean [not null, default: false]
+  name text [not null, unique]
+  organizationId text [not null, ref: > organization.id]
+  redirectUrl text
+  type text [not null]
+  userId text [not null, ref: > user.id]
+  
+  Note: 'SSO configuration for organizations'
+}
+
+Table gitProvider {
+  id text [primary key]
+  createdAt timestamp [not null]
+  organizationId text [not null, ref: > organization.id]
+  userId text [not null, ref: > user.id]
+  
+  Note: 'Git provider integration management'
+}
+
+Table github {
+  id text [primary key]
+  appId text [not null]
+  createdAt timestamp [not null]
+  gitProviderId text [not null, ref: > gitProvider.id]
+  installationId text [not null]
+  name text [not null]
+  privateKey text [not null]
+  
+  Indexes {
+    (gitProviderId) [name: "github_git_provider_unique"]
+  }
+  
+  Note: 'GitHub OAuth application configuration'
+}
+
+Table gitlab {
+  id text [primary key]
+  appId text [not null]
+  appSecret text [not null]
+  createdAt timestamp [not null]
+  gitProviderId text [not null, ref: > gitProvider.id]
+  name text [not null]
+  redirectUrl text [not null]
+  url text [not null]
+  
+  Note: 'GitLab OAuth application configuration'
+}
+
+Table gitea {
+  id text [primary key]
+  createdAt timestamp [not null]
+  gitProviderId text [not null, ref: > gitProvider.id]
+  name text [not null]
+  organizationId text [not null]
+  token text [not null]
+  url text [not null]
+  
+  Note: 'Gitea git server integration'
+}
+
+Table bitbucket {
+  id text [primary key]
+  clientId text [not null]
+  clientSecret text [not null]
+  createdAt timestamp [not null]
+  gitProviderId text [not null, ref: > gitProvider.id]
+  name text [not null]
+  workspace text [not null]
+  
+  Note: 'Bitbucket OAuth application configuration'
+}
+
+// ===== PROJECT STRUCTURE =====
+
+Table project {
+  id text [primary key]
+  createdAt timestamp [not null]
+  description text
+  name text [not null]
+  organizationId text [not null, ref: > organization.id]
+  
+  Note: 'Projects group environments and applications'
+}
+
+Table environment {
+  id text [primary key]
+  createdAt timestamp [not null]
+  description text
+  name text [not null]
+  projectId text [not null, ref: > project.id]
+  
+  Note: 'Environments contain applications and databases'
+}
+
+// ===== APPLICATIONS & SERVICES =====
+
+Table application {
+  id text [primary key]
+  autodeploy boolean [not null, default: false]
+  branch text [not null, default: 'main']
+  buildCommand text
+  buildPack text [not null, default: 'herokuish']
+  createdAt timestamp [not null]
+  customGitUrl text
+  dockerfile text
+  dokkuMarathonLabel text
+  dokkuProcesstype text
+  environmentId text [not null, ref: > environment.id]
+  gitBranch text
+  gitCommitSha text
+  gitProvider text
+  gitProviderTokenEncrypted text
+  gitRepository text
+  gitRepositoryName text
+  gitRepositoryOwner text
+  gitRepositoryUrl text
+  installCommand text
+  name text [not null]
+  publish boolean [not null, default: true]
+  publishDirectory text
+  repositoryId text [unique]
+  sourceType text [not null, default: 'docker']
+  startCommand text
+  
+  Note: 'Applications deployed in environments'
+}
+
+Table deployment {
+  id text [primary key]
+  applicationId text [not null, ref: > application.id]
+  createdAt timestamp [not null]
+  deploymentStatus text [not null, default: 'IN_PROGRESS']
+  jobId text [unique, not null]
+  logPath text
+  message text
+  status text [not null]
+  
+  Indexes {
+    (applicationId, createdAt) [name: "deployment_applicationId_createdAt_idx"]
+  }
+  
+  Note: 'Deployment records for applications'
+}
+
+Table previewDeployments {
+  id text [primary key]
+  applicationId text [not null, ref: > application.id]
+  createdAt timestamp [not null]
+  deploymentId text [not null, ref: > deployment.id]
+  name text [not null]
+  
+  Note: 'Preview deployments for feature branches'
+}
+
+Table rollback {
+  id text [primary key]
+  applicationId text [not null, ref: > application.id]
+  createdAt timestamp [not null]
+  deploymentId text [not null, ref: > deployment.id]
+  
+  Note: 'Rollback records'
+}
+
+Table compose {
+  id text [primary key]
+  createdAt timestamp [not null]
+  environmentId text [not null, ref: > environment.id]
+  name text [not null]
+  yaml text [not null]
+  
+  Note: 'Docker Compose service definitions'
+}
+
+// ===== DATABASES =====
+
+Table postgres {
+  id text [primary key]
+  createdAt timestamp [not null]
+  databaseName text [not null]
+  databasePassword text [not null]
+  databaseUser text [not null]
+  environmentId text [not null, ref: > environment.id]
+  name text [not null]
+  port integer [not null, default: 5432]
+  postgresVersion text
+  
+  Note: 'PostgreSQL database instances'
+}
+
+Table mysql {
+  id text [primary key]
+  createdAt timestamp [not null]
+  databaseName text [not null]
+  databasePassword text [not null]
+  databaseUser text [not null]
+  environmentId text [not null, ref: > environment.id]
+  mysqlVersion text
+  name text [not null]
+  port integer [not null, default: 3306]
+  
+  Note: 'MySQL database instances'
+}
+
+Table mariadb {
+  id text [primary key]
+  createdAt timestamp [not null]
+  databaseName text [not null]
+  databasePassword text [not null]
+  databaseUser text [not null]
+  environmentId text [not null, ref: > environment.id]
+  mariadbVersion text
+  name text [not null]
+  port integer [not null, default: 3306]
+  
+  Note: 'MariaDB database instances'
+}
+
+Table mongo {
+  id text [primary key]
+  createdAt timestamp [not null]
+  databasePassword text [not null]
+  databaseUser text [not null]
+  environmentId text [not null, ref: > environment.id]
+  mongoVersion text
+  name text [not null]
+  port integer [not null, default: 27017]
+  replicas integer [not null, default: 1]
+  
+  Note: 'MongoDB instances'
+}
+
+Table redis {
+  id text [primary key]
+  createdAt timestamp [not null]
+  environmentId text [not null, ref: > environment.id]
+  name text [not null]
+  port integer [not null, default: 6379]
+  redisPassword text
+  redisVersion text
+  
+  Note: 'Redis cache instances'
+}
+
+// ===== INFRASTRUCTURE =====
+
+Table server {
+  id text [primary key]
+  cliVersion text
+  createdAt timestamp [not null]
+  description text
+  dockerComposeVersion text
+  dockerVersion text
+  domain text
+  engineVersion text
+  ipAddress text [not null, unique]
+  name text [not null]
+  organizationId text [not null, ref: > organization.id]
+  remoteApiUrl text
+  sshPort integer [not null, default: 22]
+  username text [not null, default: 'root']
+  
+  Note: 'Remote servers hosting applications and databases'
+}
+
+Table sshKeys {
+  id text [primary key]
+  createdAt timestamp [not null]
+  description text
+  name text [not null]
+  organizationId text [not null, ref: > organization.id]
+  privateKey text [not null]
+  publicKey text [not null]
+  
+  Note: 'SSH key pairs for server authentication'
+}
+
+Table destination {
+  id text [primary key]
+  accessKey text [not null]
+  accessSecret text [not null]
+  bucketName text [not null]
+  createdAt timestamp [not null]
+  description text
+  name text [not null]
+  organizationId text [not null, ref: > organization.id]
+  region text [not null]
+  type text [not null]
+  
+  Note: 'Backup destinations (S3, local, etc.)'
+}
+
+Table registry {
+  id text [primary key]
+  createdAt timestamp [not null]
+  description text
+  hostname text [not null]
+  name text [not null]
+  organizationId text [not null, ref: > organization.id]
+  password text [not null]
+  port integer [not null, default: 443]
+  tlsenabled boolean [not null, default: true]
+  username text [not null]
+  
+  Note: 'Docker registries for image storage'
+}
+
+// ===== NETWORKING & CONFIGURATION =====
+
+Table domain {
+  id text [primary key]
+  applicationId text [not null, ref: > application.id]
+  createdAt timestamp [not null]
+  domain text [not null]
+  certificateExpiresAt timestamp
+  certificateIssuer text
+  certificateStatus text
+  certificateType text [not null, default: 'letsencrypt']
+  
+  Indexes {
+    (applicationId, domain) [unique, name: "domain_applicationId_domain_unique"]
+  }
+  
+  Note: 'Domain configurations for applications'
+}
+
+Table port {
+  id text [primary key]
+  applicationId text [not null, ref: > application.id]
+  createdAt timestamp [not null]
+  publicPort integer
+  targetPort integer [not null]
+  
+  Note: 'Port mappings for applications'
+}
+
+Table mount {
+  id text [primary key]
+  applicationId text [ref: > application.id]
+  composeId text [ref: > compose.id]
+  createdAt timestamp [not null]
+  hostPath text [not null]
+  serviceSidecarId text
+  volumeMountPath text [not null]
+  
+  Note: 'Volume mounts and bindings'
+}
+
+Table security {
+  id text [primary key]
+  applicationId text [not null, ref: > application.id]
+  createdAt timestamp [not null]
+  key text [not null]
+  value text [not null]
+  
+  Note: 'Security settings (basicAuth, etc.)'
+}
+
+Table redirect {
+  id text [primary key]
+  applicationId text [not null, ref: > application.id]
+  createdAt timestamp [not null]
+  regex text
+  replacement text
+  source text [not null]
+  
+  Note: 'URL redirect rules for applications'
+}
+
+// ===== BACKUPS & SCHEDULING =====
+
+Table backups {
+  id text [primary key]
+  createdAt timestamp [not null]
+  database text [not null]
+  description text
+  destinationId text [not null, ref: > destination.id]
+  databaseType text [not null]
+  jobId text
+  prefix text
+  size integer
+  status text [not null, default: 'IN_PROGRESS']
+  
+  Indexes {
+    (destinationId, createdAt) [name: "backups_destinationId_createdAt_idx"]
+  }
+  
+  Note: 'Database backups'
+}
+
+Table volumeBackups {
+  id text [primary key]
+  createdAt timestamp [not null]
+  destinationId text [not null, ref: > destination.id]
+  jobId text [unique]
+  message text
+  size integer
+  status text [not null, default: 'IN_PROGRESS']
+  volumeName text [not null]
+  
+  Note: 'Volume/storage backups'
+}
+
+Table schedule {
+  id text [primary key]
+  createdAt timestamp [not null]
+  description text
+  deploymentId text [ref: > deployment.id]
+  inputJson text
+  name text [not null]
+  saveRepositoryId text
+  status text [not null, default: 'active']
+  taskId text [unique]
+  triggerType text [not null]
+  userId text [not null, ref: > user.id]
+  
+  Note: 'Scheduled tasks and deployments'
+}
+
+// ===== VERIFICATION =====
+
+Table verification {
+  id text [primary key]
+  createdAt timestamp [not null]
+  email text [unique, not null]
+  expires timestamp [not null]
+  token text [unique, not null]
+  
+  Note: 'Email verification tokens'
+}
+
+// ===== RELATIONSHIPS =====
+
+Ref: account.userId > user.id
+Ref: apikey.userId > user.id
+Ref: organization.ownerId > user.id
+Ref: member.organizationId > organization.id
+Ref: member.userId > user.id
+Ref: invitation.organizationId > organization.id
+Ref: twoFactor.userId > user.id
+Ref: ssoProvider.organizationId > organization.id
+Ref: ssoProvider.userId > user.id
+Ref: gitProvider.organizationId > organization.id
+Ref: gitProvider.userId > user.id
+Ref: github.gitProviderId > gitProvider.id
+Ref: gitlab.gitProviderId > gitProvider.id
+Ref: gitea.gitProviderId > gitProvider.id
+Ref: bitbucket.gitProviderId > gitProvider.id
+Ref: project.organizationId > organization.id
+Ref: environment.projectId > project.id
+Ref: application.environmentId > environment.id
+Ref: deployment.applicationId > application.id
+Ref: previewDeployments.applicationId > application.id
+Ref: previewDeployments.deploymentId > deployment.id
+Ref: rollback.applicationId > application.id
+Ref: rollback.deploymentId > deployment.id
+Ref: compose.environmentId > environment.id
+Ref: postgres.environmentId > environment.id
+Ref: mysql.environmentId > environment.id
+Ref: mariadb.environmentId > environment.id
+Ref: mongo.environmentId > environment.id
+Ref: redis.environmentId > environment.id
+Ref: server.organizationId > organization.id
+Ref: sshKeys.organizationId > organization.id
+Ref: destination.organizationId > organization.id
+Ref: registry.organizationId > organization.id
+Ref: domain.applicationId > application.id
+Ref: port.applicationId > application.id
+Ref: mount.applicationId > application.id
+Ref: mount.composeId > compose.id
+Ref: security.applicationId > application.id
+Ref: redirect.applicationId > application.id
+Ref: backups.destinationId > destination.id
+Ref: volumeBackups.destinationId > destination.id
+Ref: schedule.deploymentId > deployment.id
+Ref: schedule.userId > user.id

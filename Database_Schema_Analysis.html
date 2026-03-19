@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Database Schema Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        table { border-collapse: collapse; }
+        td, th { border: 1px solid #d1d5db; padding: 0.75rem; }
+        th { background-color: #f3f4f6; font-weight: 600; }
+        tr:nth-child(even) { background-color: #fafbfc; }
+        code { background-color: #f3f4f6; padding: 0.125rem 0.25rem; border-radius: 0.25rem; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="max-w-7xl mx-auto p-8">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold mb-2 text-gray-900">Complete Database Schema Analysis</h1>
+            <p class="text-gray-600">Comprehensive documentation of all 37 database tables with columns, constraints, and relationships</p>
+        </div>
+
+        <!-- Table Documentation -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-gray-900">Table Documentation</h2>
+
+            <!-- User Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: user</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>id</td><td>text</td><td>Primary Key</td><td>Unique identifier for the user.</td></tr>
+                        <tr><td>firstName</td><td>text</td><td>Not Null, Default: ""</td><td>First name of the user.</td></tr>
+                        <tr><td>lastName</td><td>text</td><td>Not Null, Default: ""</td><td>Last name of the user.</td></tr>
+                        <tr><td>isRegistered</td><td>boolean</td><td>Not Null, Default: false</td><td>Indicates if the user is registered.</td></tr>
+                        <tr><td>email</td><td>text</td><td>Not Null, Unique</td><td>Email address of the user.</td></tr>
+                        <tr><td>emailVerified</td><td>boolean</td><td>Not Null</td><td>Indicates if email is verified.</td></tr>
+                        <tr><td>image</td><td>text</td><td></td><td>Profile image URL of the user.</td></tr>
+                        <tr><td>twoFactorEnabled</td><td>boolean</td><td></td><td>Indicates if two-factor authentication is enabled.</td></tr>
+                        <tr><td>banned</td><td>boolean</td><td></td><td>Indicates if the user is banned.</td></tr>
+                        <tr><td>banReason</td><td>text</td><td></td><td>Reason for banning the user.</td></tr>
+                        <tr><td>banExpires</td><td>timestamp</td><td></td><td>Expiration time of the ban.</td></tr>
+                        <tr><td>role</td><td>text</td><td>Not Null, Default: "user"</td><td>Role of the user (user, admin, etc.).</td></tr>
+                        <tr><td>enablePaidFeatures</td><td>boolean</td><td>Not Null, Default: false</td><td>Indicates if paid features are enabled.</td></tr>
+                        <tr><td>allowImpersonation</td><td>boolean</td><td>Not Null, Default: false</td><td>Indicates if user impersonation is allowed.</td></tr>
+                        <tr><td>enableEnterpriseFeatures</td><td>boolean</td><td>Not Null, Default: false</td><td>Indicates if enterprise features are enabled.</td></tr>
+                        <tr><td>licenseKey</td><td>text</td><td></td><td>License key for enterprise features.</td></tr>
+                        <tr><td>isValidEnterpriseLicense</td><td>boolean</td><td>Not Null, Default: false</td><td>Indicates if enterprise license is valid.</td></tr>
+                        <tr><td>stripeCustomerId</td><td>text</td><td></td><td>Stripe customer ID for billing.</td></tr>
+                        <tr><td>stripeSubscriptionId</td><td>text</td><td></td><td>Stripe subscription ID.</td></tr>
+                        <tr><td>serversQuantity</td><td>integer</td><td>Not Null, Default: 0</td><td>Number of servers the user can manage.</td></tr>
+                        <tr><td>trustedOrigins</td><td>text[]</td><td></td><td>Array of trusted origins for CORS.</td></tr>
+                        <tr><td>createdAt</td><td>timestamp</td><td></td><td>Account creation timestamp.</td></tr>
+                        <tr><td>createdAt2</td><td>text</td><td>Not Null</td><td>Account creation ISO timestamp.</td></tr>
+                        <tr><td>expirationDate</td><td>text</td><td>Not Null</td><td>Expiration date of the account.</td></tr>
+                        <tr><td>updatedAt</td><td>timestamp</td><td>Not Null</td><td>Last update timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Account Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: account</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>id</td><td>text</td><td>Primary Key</td><td>Unique identifier for the account.</td></tr>
+                        <tr><td>accountId</td><td>text</td><td>Not Null</td><td>Alternative account identifier.</td></tr>
+                        <tr><td>providerId</td><td>text</td><td>Not Null</td><td>OAuth provider identifier.</td></tr>
+                        <tr><td>userId</td><td>text</td><td>Not Null, Foreign Key (user)</td><td>Reference to the user.</td></tr>
+                        <tr><td>accessToken</td><td>text</td><td></td><td>OAuth access token.</td></tr>
+                        <tr><td>refreshToken</td><td>text</td><td></td><td>OAuth refresh token.</td></tr>
+                        <tr><td>idToken</td><td>text</td><td></td><td>OAuth ID token.</td></tr>
+                        <tr><td>accessTokenExpiresAt</td><td>timestamp</td><td></td><td>Access token expiration time.</td></tr>
+                        <tr><td>refreshTokenExpiresAt</td><td>timestamp</td><td></td><td>Refresh token expiration time.</td></tr>
+                        <tr><td>scope</td><td>text</td><td></td><td>OAuth scope permissions.</td></tr>
+                        <tr><td>password</td><td>text</td><td></td><td>Hashed password for local authentication.</td></tr>
+                        <tr><td>is2FAEnabled</td><td>boolean</td><td>Not Null, Default: false</td><td>Two-factor authentication enabled flag.</td></tr>
+                        <tr><td>resetPasswordToken</td><td>text</td><td></td><td>Token for password reset requests.</td></tr>
+                        <tr><td>resetPasswordExpiresAt</td><td>text</td><td></td><td>Password reset token expiration time.</td></tr>
+                        <tr><td>confirmationToken</td><td>text</td><td></td><td>Email confirmation token.</td></tr>
+                        <tr><td>confirmationExpiresAt</td><td>text</td><td></td><td>Confirmation token expiration time.</td></tr>
+                        <tr><td>createdAt</td><td>timestamp</td><td>Not Null</td><td>Account creation timestamp.</td></tr>
+                        <tr><td>updatedAt</td><td>timestamp</td><td>Not Null</td><td>Last update timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Organization Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: organization</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>id</td><td>text</td><td>Primary Key</td><td>Unique identifier for the organization.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Name of the organization.</td></tr>
+                        <tr><td>slug</td><td>text</td><td>Unique</td><td>URL-friendly slug for the organization.</td></tr>
+                        <tr><td>logo</td><td>text</td><td></td><td>Logo URL for the organization.</td></tr>
+                        <tr><td>ownerId</td><td>text</td><td>Not Null, Foreign Key (user)</td><td>Reference to the owner user.</td></tr>
+                        <tr><td>metadata</td><td>text</td><td></td><td>JSON metadata for the organization.</td></tr>
+                        <tr><td>createdAt</td><td>timestamp</td><td>Not Null</td><td>Organization creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Member Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: member</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>id</td><td>text</td><td>Primary Key</td><td>Unique member identifier.</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to organization.</td></tr>
+                        <tr><td>userId</td><td>text</td><td>Not Null, Foreign Key (user)</td><td>Reference to user.</td></tr>
+                        <tr><td>role</td><td>text</td><td>Not Null</td><td>Role in the organization (owner, member, admin).</td></tr>
+                        <tr><td>teamId</td><td>text</td><td></td><td>Reference to team within organization.</td></tr>
+                        <tr><td>isDefault</td><td>boolean</td><td>Not Null, Default: false</td><td>Default member flag.</td></tr>
+                        <tr><td>canCreateProjects</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to create projects.</td></tr>
+                        <tr><td>canAccessToSSHKeys</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to access SSH keys.</td></tr>
+                        <tr><td>canCreateServices</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to create services.</td></tr>
+                        <tr><td>canDeleteProjects</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to delete projects.</td></tr>
+                        <tr><td>canDeleteServices</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to delete services.</td></tr>
+                        <tr><td>canAccessToDocker</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to access Docker.</td></tr>
+                        <tr><td>canAccessToAPI</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to access API.</td></tr>
+                        <tr><td>canAccessToGitProviders</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to access Git providers.</td></tr>
+                        <tr><td>canAccessToTraefikFiles</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to access Traefik files.</td></tr>
+                        <tr><td>canDeleteEnvironments</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to delete environments.</td></tr>
+                        <tr><td>canCreateEnvironments</td><td>boolean</td><td>Not Null, Default: false</td><td>Permission to create environments.</td></tr>
+                        <tr><td>accessedProjects</td><td>text[]</td><td>Not Null, Default: []</td><td>Array of project IDs accessible by member.</td></tr>
+                        <tr><td>accessedEnvironments</td><td>text[]</td><td>Not Null, Default: []</td><td>Array of environment IDs accessible by member.</td></tr>
+                        <tr><td>accessedServices</td><td>text[]</td><td>Not Null, Default: []</td><td>Array of service IDs accessible by member.</td></tr>
+                        <tr><td>createdAt</td><td>timestamp</td><td>Not Null</td><td>Membership creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Project Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: project</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>projectId</td><td>text</td><td>Primary Key</td><td>Unique identifier for the project.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Name of the project.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Project description.</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to the organization.</td></tr>
+                        <tr><td>env</td><td>text</td><td>Not Null, Default: ""</td><td>Environment variables for the project.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Project creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Environment Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: environment</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>environmentId</td><td>text</td><td>Primary Key</td><td>Unique identifier for the environment.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Name of the environment.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Environment description.</td></tr>
+                        <tr><td>projectId</td><td>text</td><td>Not Null, Foreign Key (project)</td><td>Reference to the project.</td></tr>
+                        <tr><td>env</td><td>text</td><td>Not Null, Default: ""</td><td>Environment variables.</td></tr>
+                        <tr><td>isDefault</td><td>boolean</td><td>Not Null, Default: false</td><td>Indicates if this is the default environment.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Environment creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Server Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: server</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>serverId</td><td>text</td><td>Primary Key</td><td>Unique identifier for the server.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Server name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Server description.</td></tr>
+                        <tr><td>ipAddress</td><td>text</td><td>Not Null</td><td>IP address of the server.</td></tr>
+                        <tr><td>port</td><td>integer</td><td>Not Null</td><td>SSH port of the server.</td></tr>
+                        <tr><td>username</td><td>text</td><td>Not Null, Default: "root"</td><td>SSH username for the server.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null</td><td>Application name for the server.</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to the organization.</td></tr>
+                        <tr><td>serverStatus</td><td>enum</td><td>Not Null, Default: "active"</td><td>Server status (active, inactive).</td></tr>
+                        <tr><td>serverType</td><td>enum</td><td>Not Null, Default: "deploy"</td><td>Server type (deploy, build).</td></tr>
+                        <tr><td>enableDockerCleanup</td><td>boolean</td><td>Not Null, Default: false</td><td>Enable automatic Docker cleanup.</td></tr>
+                        <tr><td>command</td><td>text</td><td>Not Null, Default: ""</td><td>Command to execute on the server.</td></tr>
+                        <tr><td>sshKeyId</td><td>text</td><td>Foreign Key (sshKeys)</td><td>SSH key reference.</td></tr>
+                        <tr><td>metricsConfig</td><td>jsonb</td><td>Not Null</td><td>Metrics configuration JSON.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Server creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Application Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: application</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>applicationId</td><td>text</td><td>Primary Key</td><td>Unique identifier for the application.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Application name.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique application slug name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Application description.</td></tr>
+                        <tr><td>environmentId</td><td>text</td><td>Not Null, Foreign Key (environment)</td><td>Reference to environment.</td></tr>
+                        <tr><td>sourceType</td><td>enum</td><td>Not Null, Default: "github"</td><td>Source code provider (docker, git, github, gitlab, bitbucket, gitea, drop).</td></tr>
+                        <tr><td>buildType</td><td>enum</td><td>Not Null, Default: "nixpacks"</td><td>Build type (dockerfile, heroku_buildpacks, paketo_buildpacks, nixpacks, static, railpack).</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to deployment server.</td></tr>
+                        <tr><td>buildServerId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to build server.</td></tr>
+                        <tr><td>registryId</td><td>text</td><td>Foreign Key (registry)</td><td>Reference to Docker registry.</td></tr>
+                        <tr><td>buildRegistryId</td><td>text</td><td>Foreign Key (registry)</td><td>Reference to build registry.</td></tr>
+                        <tr><td>rollbackRegistryId</td><td>text</td><td>Foreign Key (registry)</td><td>Reference to rollback registry.</td></tr>
+                        <tr><td>env</td><td>text</td><td></td><td>Environment variables.</td></tr>
+                        <tr><td>applicationStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Application status (idle, running, done, error).</td></tr>
+                        <tr><td>autoDeploy</td><td>boolean</td><td></td><td>Auto-deploy on push.</td></tr>
+                        <tr><td>repository</td><td>text</td><td></td><td>GitHub repository name.</td></tr>
+                        <tr><td>owner</td><td>text</td><td></td><td>GitHub owner/organization.</td></tr>
+                        <tr><td>branch</td><td>text</td><td></td><td>Git branch to deploy.</td></tr>
+                        <tr><td>buildPath</td><td>text</td><td>Default: "/"</td><td>Path for build context.</td></tr>
+                        <tr><td>dockerfile</td><td>text</td><td></td><td>Dockerfile content or path.</td></tr>
+                        <tr><td>dockerImage</td><td>text</td><td></td><td>Docker image for deployments.</td></tr>
+                        <tr><td>replicas</td><td>integer</td><td>Not Null, Default: 1</td><td>Number of replicas.</td></tr>
+                        <tr><td>memoryReservation</td><td>text</td><td></td><td>Reserved memory.</td></tr>
+                        <tr><td>memoryLimit</td><td>text</td><td></td><td>Memory limit.</td></tr>
+                        <tr><td>cpuReservation</td><td>text</td><td></td><td>Reserved CPU.</td></tr>
+                        <tr><td>cpuLimit</td><td>text</td><td></td><td>CPU limit.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Application creation timestamp.</td></tr>
+                        <tr><td>isPreviewDeploymentsActive</td><td>boolean</td><td>Default: false</td><td>Enable preview deployments.</td></tr>
+                        <tr><td>previewLimit</td><td>integer</td><td>Default: 3</td><td>Maximum preview deployments.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Deployment Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: deployment</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>deploymentId</td><td>text</td><td>Primary Key</td><td>Unique deployment identifier.</td></tr>
+                        <tr><td>title</td><td>text</td><td>Not Null</td><td>Deployment title.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Deployment description.</td></tr>
+                        <tr><td>status</td><td>enum</td><td>Default: "running"</td><td>Deployment status (running, done, error, cancelled).</td></tr>
+                        <tr><td>logPath</td><td>text</td><td>Not Null</td><td>Path to deployment logs.</td></tr>
+                        <tr><td>pid</td><td>text</td><td></td><td>Process ID of deployment.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>composeId</td><td>text</td><td>Foreign Key (compose)</td><td>Reference to compose configuration.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>buildServerId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to build server.</td></tr>
+                        <tr><td>scheduleId</td><td>text</td><td>Foreign Key (schedule)</td><td>Reference to schedule.</td></tr>
+                        <tr><td>backupId</td><td>text</td><td>Foreign Key (backup)</td><td>Reference to backup.</td></tr>
+                        <tr><td>rollbackId</td><td>text</td><td>Foreign Key (rollback)</td><td>Reference to rollback.</td></tr>
+                        <tr><td>volumeBackupId</td><td>text</td><td>Foreign Key (volumeBackup)</td><td>Reference to volume backup.</td></tr>
+                        <tr><td>previewDeploymentId</td><td>text</td><td>Foreign Key (previewDeployment)</td><td>Reference to preview deployment.</td></tr>
+                        <tr><td>isPreviewDeployment</td><td>boolean</td><td>Default: false</td><td>Indicates if this is a preview deployment.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Deployment creation timestamp.</td></tr>
+                        <tr><td>startedAt</td><td>text</td><td></td><td>Deployment start timestamp.</td></tr>
+                        <tr><td>finishedAt</td><td>text</td><td></td><td>Deployment finish timestamp.</td></tr>
+                        <tr><td>errorMessage</td><td>text</td><td></td><td>Error message if deployment failed.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Compose Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: compose</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>composeId</td><td>text</td><td>Primary Key</td><td>Unique compose identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Compose stack name.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null</td><td>Unique application name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Stack description.</td></tr>
+                        <tr><td>environmentId</td><td>text</td><td>Not Null, Foreign Key (environment)</td><td>Reference to environment.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>sourceType</td><td>enum</td><td>Not Null, Default: "github"</td><td>Source type (git, github, gitlab, bitbucket, gitea, raw).</td></tr>
+                        <tr><td>composeType</td><td>enum</td><td>Not Null, Default: "docker-compose"</td><td>Compose type (docker-compose, stack).</td></tr>
+                        <tr><td>composeFile</td><td>text</td><td>Not Null, Default: ""</td><td>Docker compose file content.</td></tr>
+                        <tr><td>repository</td><td>text</td><td></td><td>GitHub repository name.</td></tr>
+                        <tr><td>owner</td><td>text</td><td></td><td>GitHub owner/organization.</td></tr>
+                        <tr><td>branch</td><td>text</td><td></td><td>Git branch.</td></tr>
+                        <tr><td>autoDeploy</td><td>boolean</td><td></td><td>Auto-deploy on push.</td></tr>
+                        <tr><td>composePath</td><td>text</td><td>Not Null, Default: "./docker-compose.yml"</td><td>Path to compose file in repository.</td></tr>
+                        <tr><td>composeStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Compose status (idle, running, done, error).</td></tr>
+                        <tr><td>githubId</td><td>text</td><td>Foreign Key (github)</td><td>Reference to GitHub provider.</td></tr>
+                        <tr><td>gitlabId</td><td>text</td><td>Foreign Key (gitlab)</td><td>Reference to GitLab provider.</td></tr>
+                        <tr><td>bitbucketId</td><td>text</td><td>Foreign Key (bitbucket)</td><td>Reference to Bitbucket provider.</td></tr>
+                        <tr><td>giteaId</td><td>text</td><td>Foreign Key (gitea)</td><td>Reference to Gitea provider.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Compose creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mongo Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: mongo</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>mongoId</td><td>text</td><td>Primary Key</td><td>Unique mongo instance identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>MongoDB instance name.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique application name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Instance description.</td></tr>
+                        <tr><td>databaseUser</td><td>text</td><td>Not Null</td><td>Database username.</td></tr>
+                        <tr><td>databasePassword</td><td>text</td><td>Not Null</td><td>Database password.</td></tr>
+                        <tr><td>dockerImage</td><td>text</td><td>Not Null</td><td>Docker image for MongoDB.</td></tr>
+                        <tr><td>enviro nmentId</td><td>text</td><td>Not Null, Foreign Key (environment)</td><td>Reference to environment.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>applicationStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Application status.</td></tr>
+                        <tr><td>externalPort</td><td>integer</td><td></td><td>External port for access.</td></tr>
+                        <tr><td>replicas</td><td>integer</td><td>Not Null, Default: 1</td><td>Number of replicas.</td></tr>
+                        <tr><td>replicaSets</td><td>boolean</td><td>Default: false</td><td>Enable replica sets.</td></tr>
+                        <tr><td>memoryReservation</td><td>text</td><td></td><td>Reserved memory.</td></tr>
+                        <tr><td>memoryLimit</td><td>text</td><td></td><td>Memory limit.</td></tr>
+                        <tr><td>cpuReservation</td><td>text</td><td></td><td>Reserved CPU.</td></tr>
+                        <tr><td>cpuLimit</td><td>text</td><td></td><td>CPU limit.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Instance creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Postgres Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: postgres</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>postgresId</td><td>text</td><td>Primary Key</td><td>Unique postgres instance identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>PostgreSQL instance name.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique application name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Instance description.</td></tr>
+                        <tr><td>databaseName</td><td>text</td><td>Not Null</td><td>Database name.</td></tr>
+                        <tr><td>databaseUser</td><td>text</td><td>Not Null</td><td>Database username.</td></tr>
+                        <tr><td>databasePassword</td><td>text</td><td>Not Null</td><td>Database password.</td></tr>
+                        <tr><td>dockerImage</td><td>text</td><td>Not Null</td><td>Docker image for PostgreSQL.</td></tr>
+                        <tr><td>environmentId</td><td>text</td><td>Not Null, Foreign Key (environment)</td><td>Reference to environment.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>applicationStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Application status.</td></tr>
+                        <tr><td>externalPort</td><td>integer</td><td></td><td>External port for access.</td></tr>
+                        <tr><td>replicas</td><td>integer</td><td>Not Null, Default: 1</td><td>Number of replicas.</td></tr>
+                        <tr><td>memoryReservation</td><td>text</td><td></td><td>Reserved memory.</td></tr>
+                        <tr><td>memoryLimit</td><td>text</td><td></td><td>Memory limit.</td></tr>
+                        <tr><td>cpuReservation</td><td>text</td><td></td><td>Reserved CPU.</td></tr>
+                        <tr><td>cpuLimit</td><td>text</td><td></td><td>CPU limit.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Instance creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MySQL Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: mysql</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>mysqlId</td><td>text</td><td>Primary Key</td><td>Unique MySQL instance identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>MySQL instance name.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique application name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Instance description.</td></tr>
+                        <tr><td>databaseName</td><td>text</td><td>Not Null</td><td>Database name.</td></tr>
+                        <tr><td>databaseUser</td><td>text</td><td>Not Null</td><td>Database username.</td></tr>
+                        <tr><td>databasePassword</td><td>text</td><td>Not Null</td><td>Database password.</td></tr>
+                        <tr><td>databaseRootPassword</td><td>text</td><td>Not Null</td><td>Root password.</td></tr>
+                        <tr><td>dockerImage</td><td>text</td><td>Not Null</td><td>Docker image for MySQL.</td></tr>
+                        <tr><td>environmentId</td><td>text</td><td>Not Null, Foreign Key (environment)</td><td>Reference to environment.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>applicationStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Application status.</td></tr>
+                        <tr><td>externalPort</td><td>integer</td><td></td><td>External port for access.</td></tr>
+                        <tr><td>replicas</td><td>integer</td><td>Not Null, Default: 1</td><td>Number of replicas.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Instance creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MariaDB Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: mariadb</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>mariadbId</td><td>text</td><td>Primary Key</td><td>Unique MariaDB instance identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>MariaDB instance name.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique application name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Instance description.</td></tr>
+                        <tr><td>databaseName</td><td>text</td><td>Not Null</td><td>Database name.</td></tr>
+                        <tr><td>databaseUser</td><td>text</td><td>Not Null</td><td>Database username.</td></tr>
+                        <tr><td>databasePassword</td><td>text</td><td>Not Null</td><td>Database password.</td></tr>
+                        <tr><td>databaseRootPassword</td><td>text</td><td>Not Null</td><td>Root password.</td></tr>
+                        <tr><td>dockerImage</td><td>text</td><td>Not Null</td><td>Docker image for MariaDB.</td></tr>
+                        <tr><td>environmentId</td><td>text</td><td>Not Null, Foreign Key (environment)</td><td>Reference to environment.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>applicationStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Application status.</td></tr>
+                        <tr><td>externalPort</td><td>integer</td><td></td><td>External port for access.</td></tr>
+                        <tr><td>replicas</td><td>integer</td><td>Not Null, Default: 1</td><td>Number of replicas.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Instance creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Redis Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: redis</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>redisId</td><td>text</td><td>Primary Key</td><td>Unique Redis instance identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Redis instance name.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique application name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>Instance description.</td></tr>
+                        <tr><td>databasePassword</td><td>text</td><td>Not Null</td><td>Redis password.</td></tr>
+                        <tr><td>dockerImage</td><td>text</td><td>Not Null</td><td>Docker image for Redis.</td></tr>
+                        <tr><td>environmentId</td><td>text</td><td>Not Null, Foreign Key (environment)</td><td>Reference to environment.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>applicationStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Application status.</td></tr>
+                        <tr><td>externalPort</td><td>integer</td><td></td><td>External port for access.</td></tr>
+                        <tr><td>replicas</td><td>integer</td><td>Not Null, Default: 1</td><td>Number of replicas.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Instance creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Backups Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: backups</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>backupId</td><td>text</td><td>Primary Key</td><td>Unique backup identifier.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique backup name.</td></tr>
+                        <tr><td>schedule</td><td>text</td><td>Not Null</td><td>Backup schedule (cron expression).</td></tr>
+                        <tr><td>enabled</td><td>boolean</td><td></td><td>Backup enabled flag.</td></tr>
+                        <tr><td>database</td><td>text</td><td>Not Null</td><td>Database name to backup.</td></tr>
+                        <tr><td>prefix</td><td>text</td><td>Not Null</td><td>Backup file prefix.</td></tr>
+                        <tr><td>serviceName</td><td>text</td><td></td><td>Service name for backup.</td></tr>
+                        <tr><td>destinationId</td><td>text</td><td>Not Null, Foreign Key (destination)</td><td>Reference to backup destination.</td></tr>
+                        <tr><td>keepLatestCount</td><td>integer</td><td></td><td>Number of latest backups to keep.</td></tr>
+                        <tr><td>backupType</td><td>enum</td><td>Not Null, Default: "database"</td><td>Backup type (database, compose).</td></tr>
+                        <tr><td>databaseType</td><td>enum</td><td>Not Null</td><td>Database type (postgres, mariadb, mysql, mongo, web-server).</td></tr>
+                        <tr><td>postgresId</td><td>text</td><td>Foreign Key (postgres)</td><td>Reference to postgres database.</td></tr>
+                        <tr><td>mysqlId</td><td>text</td><td>Foreign Key (mysql)</td><td>Reference to MySQL database.</td></tr>
+                        <tr><td>mariadbId</td><td>text</td><td>Foreign Key (mariadb)</td><td>Reference to MariaDB database.</td></tr>
+                        <tr><td>mongoId</td><td>text</td><td>Foreign Key (mongo)</td><td>Reference to MongoDB.</td></tr>
+                        <tr><td>composeId</td><td>text</td><td>Foreign Key (compose)</td><td>Reference to compose configuration.</td></tr>
+                        <tr><td>userId</td><td>text</td><td>Foreign Key (user)</td><td>Reference to backup creator.</td></tr>
+                        <tr><td>metadata</td><td>jsonb</td><td></td><td>Backup metadata configuration.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Destination Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: destination</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>destinationId</td><td>text</td><td>Primary Key</td><td>Unique destination identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Destination name.</td></tr>
+                        <tr><td>provider</td><td>text</td><td></td><td>Storage provider (S3, etc.).</td></tr>
+                        <tr><td>accessKey</td><td>text</td><td>Not Null</td><td>Access key for storage provider.</td></tr>
+                        <tr><td>secretAccessKey</td><td>text</td><td>Not Null</td><td>Secret access key for storage provider.</td></tr>
+                        <tr><td>bucket</td><td>text</td><td>Not Null</td><td>Storage bucket name.</td></tr>
+                        <tr><td>region</td><td>text</td><td>Not Null</td><td>Storage region.</td></tr>
+                        <tr><td>endpoint</td><td>text</td><td>Not Null</td><td>Storage endpoint URL.</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to organization.</td></tr>
+                        <tr><td>createdAt</td><td>timestamp</td><td>Not Null</td><td>Destination creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mounts Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: mounts</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>mountId</td><td>text</td><td>Primary Key</td><td>Unique mount identifier.</td></tr>
+                        <tr><td>type</td><td>enum</td><td>Not Null</td><td>Mount type (bind, volume, file).</td></tr>
+                        <tr><td>hostPath</td><td>text</td><td></td><td>Host path for bind mount.</td></tr>
+                        <tr><td>volumeName</td><td>text</td><td></td><td>Volume name for volume mount.</td></tr>
+                        <tr><td>filePath</td><td>text</td><td></td><td>File path for file mount.</td></tr>
+                        <tr><td>content</td><td>text</td><td></td><td>File content for file mount.</td></tr>
+                        <tr><td>mountPath</td><td>text</td><td>Not Null</td><td>Container mount path.</td></tr>
+                        <tr><td>serviceType</td><td>enum</td><td>Not Null, Default: "application"</td><td>Service type (application, postgres, mysql, mariadb, mongo, redis, compose).</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>postgresId</td><td>text</td><td>Foreign Key (postgres)</td><td>Reference to postgres database.</td></tr>
+                        <tr><td>mysqlId</td><td>text</td><td>Foreign Key (mysql)</td><td>Reference to MySQL database.</td></tr>
+                        <tr><td>mariadbId</td><td>text</td><td>Foreign Key (mariadb)</td><td>Reference to MariaDB database.</td></tr>
+                        <tr><td>mongoId</td><td>text</td><td>Foreign Key (mongo)</td><td>Reference to MongoDB.</td></tr>
+                        <tr><td>redisId</td><td>text</td><td>Foreign Key (redis)</td><td>Reference to Redis.</td></tr>
+                        <tr><td>composeId</td><td>text</td><td>Foreign Key (compose)</td><td>Reference to compose configuration.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Schedule Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: schedule</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>scheduleId</td><td>text</td><td>Primary Key</td><td>Unique schedule identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Schedule name.</td></tr>
+                        <tr><td>cronExpression</td><td>text</td><td>Not Null</td><td>Cron expression for schedule.</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null</td><td>Unique schedule app name.</td></tr>
+                        <tr><td>command</td><td>text</td><td>Not Null</td><td>Command to execute.</td></tr>
+                        <tr><td>script</td><td>text</td><td></td><td>Script to execute.</td></tr>
+                        <tr><td>shellType</td><td>enum</td><td>Not Null, Default: "bash"</td><td>Shell type (bash, sh).</td></tr>
+                        <tr><td>scheduleType</td><td>enum</td><td>Not Null, Default: "application"</td><td>Schedule type (application, compose, server, dokploy-server).</td></tr>
+                        <tr><td>serviceName</td><td>text</td><td></td><td>Service name for schedule.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>composeId</td><td>text</td><td>Foreign Key (compose)</td><td>Reference to compose configuration.</td></tr>
+                        <tr><td>serverId</td><td>text</td><td>Foreign Key (server)</td><td>Reference to server.</td></tr>
+                        <tr><td>userId</td><td>text</td><td>Foreign Key (user)</td><td>Reference to schedule creator.</td></tr>
+                        <tr><td>enabled</td><td>boolean</td><td>Not Null, Default: true</td><td>Schedule enabled flag.</td></tr>
+                        <tr><td>timezone</td><td>text</td><td></td><td>Timezone for schedule.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Schedule creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Domain Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: domain</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>domainId</td><td>text</td><td>Primary Key</td><td>Unique domain identifier.</td></tr>
+                        <tr><td>host</td><td>text</td><td>Not Null</td><td>Domain hostname.</td></tr>
+                        <tr><td>https</td><td>boolean</td><td>Not Null, Default: false</td><td>HTTPS enabled flag.</td></tr>
+                        <tr><td>port</td><td>integer</td><td>Default: 3000</td><td>Service port.</td></tr>
+                        <tr><td>path</td><td>text</td><td>Default: "/"</td><td>URL path.</td></tr>
+                        <tr><td>serviceName</td><td>text</td><td></td><td>Service name for domain routing.</td></tr>
+                        <tr><td>domainType</td><td>enum</td><td>Default: "application"</td><td>Domain type (compose, application, preview).</td></tr>
+                        <tr><td>customCertResolver</td><td>text</td><td></td><td>Custom certificate resolver.</td></tr>
+                        <tr><td>certificateType</td><td>enum</td><td>Not Null, Default: "none"</td><td>Certificate type (none, letsencrypt, custom).</td></tr>
+                        <tr><td>internalPath</td><td>text</td><td>Default: "/"</td><td>Internal path mapping.</td></tr>
+                        <tr><td>stripPath</td><td>boolean</td><td>Not Null, Default: false</td><td>Strip path prefix flag.</td></tr>
+                        <tr><td>uniqueConfigKey</td><td>serial</td><td></td><td>Unique config identifier.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>composeId</td><td>text</td><td>Foreign Key (compose)</td><td>Reference to compose configuration.</td></tr>
+                        <tr><td>previewDeploymentId</td><td>text</td><td>Foreign Key (previewDeployment)</td><td>Reference to preview deployment.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Domain creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Port Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: port</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>portId</td><td>text</td><td>Primary Key</td><td>Unique port identifier.</td></tr>
+                        <tr><td>publishedPort</td><td>integer</td><td>Not Null</td><td>Published port number.</td></tr>
+                        <tr><td>targetPort</td><td>integer</td><td>Not Null</td><td>Target container port.</td></tr>
+                        <tr><td>protocol</td><td>enum</td><td>Not Null</td><td>Protocol type (tcp, udp).</td></tr>
+                        <tr><td>publishMode</td><td>enum</td><td>Not Null, Default: "host"</td><td>Publish mode (ingress, host).</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Not Null, Foreign Key (application)</td><td>Reference to application.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Security Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: security</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>securityId</td><td>text</td><td>Primary Key</td><td>Unique security rule identifier.</td></tr>
+                        <tr><td>username</td><td>text</td><td>Not Null</td><td>Authentication username.</td></tr>
+                        <tr><td>password</td><td>text</td><td>Not Null</td><td>Authentication password.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Not Null, Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Security rule creation timestamp.</td></tr>
+                        <tr><td colspan="4"><strong>Unique Constraint:</strong> (username, applicationId)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Redirect Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: redirect</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>redirectId</td><td>text</td><td>Primary Key</td><td>Unique redirect identifier.</td></tr>
+                        <tr><td>regex</td><td>text</td><td>Not Null</td><td>Regex pattern for matching.</td></tr>
+                        <tr><td>replacement</td><td>text</td><td>Not Null</td><td>Replacement URL.</td></tr>
+                        <tr><td>permanent</td><td>boolean</td><td>Not Null, Default: false</td><td>Permanent redirect flag (301 vs 302).</td></tr>
+                        <tr><td>uniqueConfigKey</td><td>serial</td><td></td><td>Unique config identifier.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Not Null, Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Redirect creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Registry Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: registry</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>registryId</td><td>text</td><td>Primary Key</td><td>Unique registry identifier.</td></tr>
+                        <tr><td>registryName</td><td>text</td><td>Not Null</td><td>Registry name.</td></tr>
+                        <tr><td>imagePrefix</td><td>text</td><td></td><td>Image prefix for registry.</td></tr>
+                        <tr><td>username</td><td>text</td><td>Not Null</td><td>Registry username.</td></tr>
+                        <tr><td>password</td><td>text</td><td>Not Null</td><td>Registry password.</td></tr>
+                        <tr><td>registryUrl</td><td>text</td><td>Not Null, Default: ""</td><td>Registry URL endpoint.</td></tr>
+                        <tr><td>registryType</td><td>enum</td><td>Not Null, Default: "cloud"</td><td>Registry type (selfHosted, cloud).</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to organization.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Registry creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Preview Deployments Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: previewDeployments</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>previewDeploymentId</td><td>text</td><td>Primary Key</td><td>Unique preview deployment identifier.</td></tr>
+                        <tr><td>branch</td><td>text</td><td>Not Null</td><td>Git branch for preview.</td></tr>
+                        <tr><td>pullRequestId</td><td>text</td><td>Not Null</td><td>Pull request external ID.</td></tr>
+                        <tr><td>pullRequestNumber</td><td>text</td><td>Not Null</td><td>Pull request number.</td></tr>
+                        <tr><td>pullRequestURL</td><td>text</td><td>Not Null</td><td>Pull request URL.</td></tr>
+                        <tr><td>pullRequestTitle</td><td>text</td><td>Not Null</td><td>Pull request title.</td></tr>
+                        <tr><td>pullRequestCommentId</td><td>text</td><td>Not Null</td><td>Pull request comment ID.</td></tr>
+                        <tr><td>previewStatus</td><td>enum</td><td>Not Null, Default: "idle"</td><td>Preview status (idle, running, done, error).</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null, Unique</td><td>Unique preview app name.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Not Null, Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>domainId</td><td>text</td><td>Foreign Key (domain)</td><td>Reference to domain.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Preview deployment creation timestamp.</td></tr>
+                        <tr><td>expiresAt</td><td>text</td><td></td><td>Preview expiration timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Rollback Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: rollback</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>rollbackId</td><td>text</td><td>Primary Key</td><td>Unique rollback identifier.</td></tr>
+                        <tr><td>deploymentId</td><td>text</td><td>Not Null, Foreign Key (deployment)</td><td>Reference to deployment.</td></tr>
+                        <tr><td>version</td><td>serial</td><td></td><td>Rollback version number.</td></tr>
+                        <tr><td>image</td><td>text</td><td></td><td>Docker image for rollback.</td></tr>
+                        <tr><td>fullContext</td><td>jsonb</td><td></td><td>Full application context snapshot.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Rollback creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Volume Backup Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: volumeBackups</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>volumeBackupId</td><td>text</td><td>Primary Key</td><td>Unique volume backup identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Volume backup name.</td></tr>
+                        <tr><td>volumeName</td><td>text</td><td>Not Null</td><td>Docker volume name.</td></tr>
+                        <tr><td>prefix</td><td>text</td><td>Not Null</td><td>Backup file prefix.</td></tr>
+                        <tr><td>serviceName</td><td>text</td><td></td><td>Service name for backup.</td></tr>
+                        <tr><td>serviceType</td><td>enum</td><td>Not Null, Default: "application"</td><td>Service type (application, postgres, mysql, mariadb, mongo, redis, compose).</td></tr>
+                        <tr><td>appName</td><td>text</td><td>Not Null</td><td>Unique backup app name.</td></tr>
+                        <tr><td>cronExpression</td><td>text</td><td>Not Null</td><td>Cron expression for backup schedule.</td></tr>
+                        <tr><td>keepLatestCount</td><td>integer</td><td></td><td>Number of latest backups to keep.</td></tr>
+                        <tr><td>enabled</td><td>boolean</td><td></td><td>Backup enabled flag.</td></tr>
+                        <tr><td>turnOff</td><td>boolean</td><td>Not Null, Default: false</td><td>Backup disabled flag.</td></tr>
+                        <tr><td>destinationId</td><td>text</td><td>Not Null, Foreign Key (destination)</td><td>Reference to backup destination.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td>Foreign Key (application)</td><td>Reference to application.</td></tr>
+                        <tr><td>postgresId</td><td>text</td><td>Foreign Key (postgres)</td><td>Reference to postgres database.</td></tr>
+                        <tr><td>mysqlId</td><td>text</td><td>Foreign Key (mysql)</td><td>Reference to MySQL database.</td></tr>
+                        <tr><td>mariadbId</td><td>text</td><td>Foreign Key (mariadb)</td><td>Reference to MariaDB database.</td></tr>
+                        <tr><td>mongoId</td><td>text</td><td>Foreign Key (mongo)</td><td>Reference to MongoDB.</td></tr>
+                        <tr><td>redisId</td><td>text</td><td>Foreign Key (redis)</td><td>Reference to Redis.</td></tr>
+                        <tr><td>composeId</td><td>text</td><td>Foreign Key (compose)</td><td>Reference to compose configuration.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Volume backup creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SSH Key Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: sshKeys</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>sshKeyId</td><td>text</td><td>Primary Key</td><td>Unique SSH key identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>SSH key name.</td></tr>
+                        <tr><td>description</td><td>text</td><td></td><td>SSH key description.</td></tr>
+                        <tr><td>privateKey</td><td>text</td><td>Not Null, Default: ""</td><td>Private key content.</td></tr>
+                        <tr><td>publicKey</td><td>text</td><td>Not Null</td><td>Public key content.</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to organization.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>SSH key creation timestamp.</td></tr>
+                        <tr><td>lastUsedAt</td><td>text</td><td></td><td>Last usage timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Git Provider Tables -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: gitProvider</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>gitProviderId</td><td>text</td><td>Primary Key</td><td>Unique git provider identifier.</td></tr>
+                        <tr><td>name</td><td>text</td><td>Not Null</td><td>Provider name.</td></tr>
+                        <tr><td>providerType</td><td>enum</td><td>Not Null, Default: "github"</td><td>Provider type (github, gitlab, bitbucket, gitea).</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to organization.</td></tr>
+                        <tr><td>userId</td><td>text</td><td>Not Null, Foreign Key (user)</td><td>Reference to user.</td></tr>
+                        <tr><td>createdAt</td><td>text</td><td>Not Null</td><td>Provider creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GitHub Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: github</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>githubId</td><td>text</td><td>Primary Key</td><td>Unique GitHub provider identifier.</td></tr>
+                        <tr><td>githubAppName</td><td>text</td><td></td><td>GitHub App name.</td></tr>
+                        <tr><td>githubAppId</td><td>integer</td><td></td><td>GitHub App ID.</td></tr>
+                        <tr><td>githubClientId</td><td>text</td><td></td><td>OAuth client ID.</td></tr>
+                        <tr><td>githubClientSecret</td><td>text</td><td></td><td>OAuth client secret.</td></tr>
+                        <tr><td>githubInstallationId</td><td>text</td><td></td><td>GitHub installation ID.</td></tr>
+                        <tr><td>githubPrivateKey</td><td>text</td><td></td><td>GitHub App private key.</td></tr>
+                        <tr><td>githubWebhookSecret</td><td>text</td><td></td><td>Webhook secret.</td></tr>
+                        <tr><td>gitProviderId</td><td>text</td><td>Not Null, Foreign Key (gitProvider)</td><td>Reference to git provider.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GitLab Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: gitlab</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>gitlabId</td><td>text</td><td>Primary Key</td><td>Unique GitLab provider identifier.</td></tr>
+                        <tr><td>gitlabUrl</td><td>text</td><td>Not Null, Default: "https://gitlab.com"</td><td>GitLab instance URL.</td></tr>
+                        <tr><td>gitlabInternalUrl</td><td>text</td><td></td><td>Internal GitLab URL.</td></tr>
+                        <tr><td>applicationId</td><td>text</td><td></td><td>OAuth application ID.</td></tr>
+                        <tr><td>redirectUri</td><td>text</td><td></td><td>OAuth redirect URI.</td></tr>
+                        <tr><td>secret</td><td>text</td><td></td><td>OAuth secret.</td></tr>
+                        <tr><td>accessToken</td><td>text</td><td></td><td>Access token.</td></tr>
+                        <tr><td>refreshToken</td><td>text</td><td></td><td>Refresh token.</td></tr>
+                        <tr><td>groupName</td><td>text</td><td></td><td>GitLab group name.</td></tr>
+                        <tr><td>expiresAt</td><td>integer</td><td></td><td>Token expiration timestamp.</td></tr>
+                        <tr><td>gitProviderId</td><td>text</td><td>Not Null, Foreign Key (gitProvider)</td><td>Reference to git provider.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Gitea Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: gitea</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>giteaId</td><td>text</td><td>Primary Key</td><td>Unique Gitea provider identifier.</td></tr>
+                        <tr><td>giteaUrl</td><td>text</td><td>Not Null, Default: "https://gitea.com"</td><td>Gitea instance URL.</td></tr>
+                        <tr><td>giteaInternalUrl</td><td>text</td><td></td><td>Internal Gitea URL.</td></tr>
+                        <tr><td>redirectUri</td><td>text</td><td></td><td>OAuth redirect URI.</td></tr>
+                        <tr><td>clientId</td><td>text</td><td></td><td>OAuth client ID.</td></tr>
+                        <tr><td>clientSecret</td><td>text</td><td></td><td>OAuth client secret.</td></tr>
+                        <tr><td>accessToken</td><td>text</td><td></td><td>Access token.</td></tr>
+                        <tr><td>refreshToken</td><td>text</td><td></td><td>Refresh token.</td></tr>
+                        <tr><td>expiresAt</td><td>integer</td><td></td><td>Token expiration timestamp.</td></tr>
+                        <tr><td>scopes</td><td>text</td><td>Default: "repo,repo:status,read:user,read:org"</td><td>OAuth scopes.</td></tr>
+                        <tr><td>lastAuthenticatedAt</td><td>integer</td><td></td><td>Last authentication timestamp.</td></tr>
+                        <tr><td>gitProviderId</td><td>text</td><td>Not Null, Foreign Key (gitProvider)</td><td>Reference to git provider.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bitbucket Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: bitbucket</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>bitbucketId</td><td>text</td><td>Primary Key</td><td>Unique Bitbucket provider identifier.</td></tr>
+                        <tr><td>bitbucketUsername</td><td>text</td><td></td><td>Bitbucket username.</td></tr>
+                        <tr><td>bitbucketEmail</td><td>text</td><td></td><td>Bitbucket email.</td></tr>
+                        <tr><td>appPassword</td><td>text</td><td></td><td>App password for authentication.</td></tr>
+                        <tr><td>apiToken</td><td>text</td><td></td><td>API token.</td></tr>
+                        <tr><td>bitbucketWorkspaceName</td><td>text</td><td></td><td>Workspace name.</td></tr>
+                        <tr><td>gitProviderId</td><td>text</td><td>Not Null, Foreign Key (gitProvider)</td><td>Reference to git provider.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SSO Provider Table -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: ssoProvider</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>id</td><td>text</td><td>Primary Key</td><td>Unique SSO provider identifier.</td></tr>
+                        <tr><td>issuer</td><td>text</td><td>Not Null</td><td>OIDC/SAML issuer URL.</td></tr>
+                        <tr><td>oidcConfig</td><td>text</td><td></td><td>OIDC configuration JSON.</td></tr>
+                        <tr><td>samlConfig</td><td>text</td><td></td><td>SAML configuration JSON.</td></tr>
+                        <tr><td>providerId</td><td>text</td><td>Not Null, Unique</td><td>Provider external ID.</td></tr>
+                        <tr><td>domain</td><td>text</td><td>Not Null</td><td>Domain for SSO.</td></tr>
+                        <tr><td>userId</td><td>text</td><td>Foreign Key (user)</td><td>Reference to user.</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Foreign Key (organization)</td><td>Reference to organization.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Additional System Tables -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: verification</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>id</td><td>text</td><td>Primary Key</td><td>Unique verification identifier.</td></tr>
+                        <tr><td>identifier</td><td>text</td><td>Not Null</td><td>Email or identifier being verified.</td></tr>
+                        <tr><td>value</td><td>text</td><td>Not Null</td><td>Verification token.</td></tr>
+                        <tr><td>expiresAt</td><td>timestamp</td><td>Not Null</td><td>Token expiration time.</td></tr>
+                        <tr><td>createdAt</td><td>timestamp</td><td></td><td>Creation timestamp.</td></tr>
+                        <tr><td>updatedAt</td><td>timestamp</td><td></td><td>Last update timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Table: invitation</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                            <th class="text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>id</td><td>text</td><td>Primary Key</td><td>Unique invitation identifier.</td></tr>
+                        <tr><td>organizationId</td><td>text</td><td>Not Null, Foreign Key (organization)</td><td>Reference to organization.</td></tr>
+                        <tr><td>email</td><td>text</td><td>Not Null</td><td>Invited email address.</td></tr>
+                        <tr><td>role</td><td>text</td><td></td><td>Role assigned to invitee (owner, member, admin).</td></tr>
+                        <tr><td>status</td><td>text</td><td>Not Null</td><td>Invitation status.</td></tr>
+                        <tr><td>expiresAt</td><td>timestamp</td><td>Not Null</td><td>Invitation expiration time.</td></tr>
+                        <tr><td>inviterId</td><td>text</td><td>Not Null, Foreign Key (user)</td><td>Reference to inviter.</td></tr>
+                        <tr><td>teamId</td><td>text</td><td></td><td>Team ID if applicable.</td></tr>
+                        <tr><td>createdAt</td><td>timestamp</td><td>Not Null</td><td>Invitation creation timestamp.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4 bg-blue-50 p-4 rounded">Tables: twoFactor, apikey</h3>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="text-left">Table</th>
+                            <th class="text-left">Column Name</th>
+                            <th class="text-left">Data Type</th>
+                            <th class="text-left">Constraints</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>twoFactor</strong></td><td>id</td><td>text</td><td>Primary Key</td></tr>
+                        <tr><td></td><td>secret</td><td>text</td><td>Not Null</td></tr>
+                        <tr><td></td><td>backupCodes</td><td>text</td><td>Not Null</td></tr>
+                        <tr><td></td><td>userId</td><td>text</td><td>Not Null, Foreign Key (user)</td></tr>
+                        <tr><td><strong>apikey</strong></td><td>id</td><td>text</td><td>Primary Key</td></tr>
+                        <tr><td></td><td>name</td><td>text</td><td></td></tr>
+                        <tr><td></td><td>start</td><td>text</td><td></td></tr>
+                        <tr><td></td><td>prefix</td><td>text</td><td></td></tr>
+                        <tr><td></td><td>key</td><td>text</td><td>Not Null</td></tr>
+                        <tr><td></td><td>userId</td><td>text</td><td>Not Null, Foreign Key (user)</td></tr>
+                        <tr><td></td><td>rateLimitEnabled</td><td>boolean</td><td></td></tr>
+                        <tr><td></td><td>rateLimitTimeWindow</td><td>integer</td><td></td></tr>
+                        <tr><td></td><td>rateLimitMax</td><td>integer</td><td></td></tr>
+                        <tr><td></td><td>expiresAt</td><td>timestamp</td><td></td></tr>
+                        <tr><td></td><td>createdAt</td><td>timestamp</td><td>Not Null</td></tr>
+                        <tr><td></td><td>updatedAt</td><td>timestamp</td><td>Not Null</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- ER Diagram -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-gray-900">Complete Entity-Relationship Diagram</h2>
+            <div class="mermaid">erDiagram
+    USER ||--o{ ACCOUNT : has
+    USER ||--o{ ORGANIZATION : owns
+    USER ||--o{ MEMBER : joins
+    USER ||--o{ SCHEDULES : creates
+    USER ||--o{ BACKUPS : creates
+    USER ||--o{ APIKEY : owns
+    USER ||--o{ SSO_PROVIDER : has
+    USER ||--o{ GIT_PROVIDER : creates
+
+    ORGANIZATION ||--o{ PROJECT : contains
+    ORGANIZATION ||--o{ MEMBER : has
+    ORGANIZATION ||--o{ SERVER : owns
+    ORGANIZATION ||--o{ DESTINATION : owns
+    ORGANIZATION ||--o{ SSH_KEY : owns
+    ORGANIZATION ||--o{ REGISTRY : owns
+    ORGANIZATION ||--o{ GIT_PROVIDER : uses
+
+    PROJECT ||--o{ ENVIRONMENT : contains
+    
+    ENVIRONMENT ||--o{ APPLICATION : contains
+    ENVIRONMENT ||--o{ COMPOSE : contains
+    ENVIRONMENT ||--o{ MONGO : contains
+    ENVIRONMENT ||--o{ POSTGRES : contains
+    ENVIRONMENT ||--o{ MYSQL : contains
+    ENVIRONMENT ||--o{ MARIADB : contains
+    ENVIRONMENT ||--o{ REDIS : contains
+
+    SERVER ||--o{ APPLICATION : hosts
+    SERVER ||--o{ COMPOSE : hosts
+    SERVER ||--o{ MONGO : hosts
+    SERVER ||--o{ POSTGRES : hosts
+    SERVER ||--o{ MYSQL : hosts
+    SERVER ||--o{ MARIADB : hosts
+    SERVER ||--o{ REDIS : hosts
+    SERVER ||--o{ DEPLOYMENT : runs
+    SERVER ||--o{ SCHEDULE : executes
+
+    SSH_KEY ||--o{ APPLICATION : uses
+    SSH_KEY ||--o{ COMPOSE : uses
+    SSH_KEY ||--o{ SERVER : uses
+
+    APPLICATION ||--o{ DEPLOYMENT : tracks
+    APPLICATION ||--o{ DOMAIN : routes
+    APPLICATION ||--o{ PORT : exposes
+    APPLICATION ||--o{ MOUNT : binds
+    APPLICATION ||--o{ SECURITY : protects
+    APPLICATION ||--o{ REDIRECT : redirects
+    APPLICATION ||--o{ PREVIEW_DEPLOYMENT : generates
+
+    COMPOSE ||--o{ DEPLOYMENT : tracks
+    COMPOSE ||--o{ DOMAIN : routes
+    COMPOSE ||--o{ MOUNT : binds
+    COMPOSE ||--o{ SCHEDULE : executes
+    COMPOSE ||--o{ BACKUPS : backups
+
+    MONGO ||--o{ DEPLOYMENT : interacts
+    MONGO ||--o{ BACKUPS : backupable
+    MONGO ||--o{ MOUNT : mounts
+    MONGO ||--o{ VOLUME_BACKUP : backs_up
+
+    POSTGRES ||--o{ DEPLOYMENT : interacts
+    POSTGRES ||--o{ BACKUPS : backupable
+    POSTGRES ||--o{ MOUNT : mounts
+    POSTGRES ||--o{ VOLUME_BACKUP : backs_up
+
+    MYSQL ||--o{ DEPLOYMENT : interacts
+    MYSQL ||--o{ BACKUPS : backupable
+    MYSQL ||--o{ MOUNT : mounts
+    MYSQL ||--o{ VOLUME_BACKUP : backs_up
+
+    MARIADB ||--o{ DEPLOYMENT : interacts
+    MARIADB ||--o{ BACKUPS : backupable
+    MARIADB ||--o{ MOUNT : mounts
+    MARIADB ||--o{ VOLUME_BACKUP : backs_up
+
+    REDIS ||--o{ DEPLOYMENT : interacts
+    REDIS ||--o{ MOUNT : mounts
+    REDIS ||--o{ VOLUME_BACKUP : backs_up
+
+    REGISTRY ||--o{ APPLICATION : stores_images
+    REGISTRY ||--o{ REGISTRY : stores_images
+
+    DEPLOYMENT ||--o{ PREVIEW_DEPLOYMENT : triggers
+    DEPLOYMENT ||--o{ ROLLBACK : initiates
+    DEPLOYMENT ||--o{ VOLUME_BACKUP : triggers
+    DEPLOYMENT ||--o{ SCHEDULE : executes
+
+    BACKUPS ||--o{ DEPLOYMENT : tracks
+    BACKUPS ||--o{ DESTINATION : uploads_to
+
+    VOLUME_BACKUP ||--o{ DEPLOYMENT : tracks
+    VOLUME_BACKUP ||--o{ DESTINATION : uploads_to
+    VOLUME_BACKUP ||--o{ APPLICATION : backs_up
+    VOLUME_BACKUP ||--o{ COMPOSE : backs_up
+    VOLUME_BACKUP ||--o{ MONGO : backs_up
+    VOLUME_BACKUP ||--o{ POSTGRES : backs_up
+    VOLUME_BACKUP ||--o{ MYSQL : backs_up
+    VOLUME_BACKUP ||--o{ MARIADB : backs_up
+    VOLUME_BACKUP ||--o{ REDIS : backs_up
+
+    PREVIEW_DEPLOYMENT ||--o{ DOMAIN : has_domain
+    PREVIEW_DEPLOYMENT ||--o{ DEPLOYMENT : generates
+
+    GIT_PROVIDER ||--o{ GITHUB : offers
+    GIT_PROVIDER ||--o{ GITLAB : offers
+    GIT_PROVIDER ||--o{ GITEA : offers
+    GIT_PROVIDER ||--o{ BITBUCKET : offers
+
+    GITHUB ||--o{ APPLICATION : connects
+    GITHUB ||--o{ COMPOSE : connects
+
+    GITLAB ||--o{ APPLICATION : connects
+    GITLAB ||--o{ COMPOSE : connects
+
+    GITEA ||--o{ APPLICATION : connects
+    GITEA ||--o{ COMPOSE : connects
+
+    BITBUCKET ||--o{ APPLICATION : connects
+    BITBUCKET ||--o{ COMPOSE : connects
+
+    GITHUB ||--o{ GIT_PROVIDER : belongs_to
+    GITLAB ||--o{ GIT_PROVIDER : belongs_to
+    GITEA ||--o{ GIT_PROVIDER : belongs_to
+    BITBUCKET ||--o{ GIT_PROVIDER : belongs_to</div>
+        </section>
+
+        <!-- Schema Extension Recommendations -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 text-gray-900">Schema Extension Recommendations</h2>
+            <div class="space-y-6">
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded">
+                    <h3 class="text-lg font-semibold mb-2 text-blue-900">1. Strategic Indexing for Performance Optimization</h3>
+                    <p class="text-gray-700">Create composite indexes on frequently queried foreign key columns and search filters: Index (organizationId, createdAt), (environmentId, applicationStatus), (serverId, createdAt) on relevant tables. This significantly improves query performance on join operations and filtering.</p>
+                </div>
+
+                <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded">
+                    <h3 class="text-lg font-semibold mb-2 text-green-900">2. Audit Logging and Change Tracking</h3>
+                    <p class="text-gray-700">Add updatedAt, updatedBy, and deletedAt columns to all operational tables (applications, deployments, schedules, etc.). Include an audit_log table to track all changes with timestamps, user references, and change descriptions. This enables compliance, debugging, and data governance.</p>
+                </div>
+
+                <div class="bg-purple-50 border-l-4 border-purple-500 p-6 rounded">
+                    <h3 class="text-lg font-semibold mb-2 text-purple-900">3. Table Partitioning for Scalability</h3>
+                    <p class="text-gray-700">Partition the deployment, backups, and volume_backup tables by date or status to improve query performance and manageability as data grows. Consider range partitioning by createdAt month for historical data and time-series queries. This improves both performance and maintenance.</p>
+                </div>
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded">
+                    <h3 class="text-lg font-semibold mb-2 text-yellow-900">4. Denormalization and Caching Strategy</h3>
+                    <p class="text-gray-700">Add computed columns for frequently accessed aggregates: application_count on environments, total_deployments on applications, storage_used on organizations. Implement caching layers (Redis materialized views) for user permissions and recent deployments to reduce database load.</p>
+                </div>
+
+                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded">
+                    <h3 class="text-lg font-semibold mb-2 text-red-900">5. Data Integrity and Foreign Key Constraints</h3>
+                    <p class="text-gray-700">Enforce referential integrity by adding CHECK constraints on enum fields (applicationStatus, serverType, deploymentStatus). Add unique constraints on business keys (appName per organization) and validate data consistency across related tables. Implement soft deletes for critical records.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    </script>
+</body>
+</html>
